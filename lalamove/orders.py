@@ -115,13 +115,13 @@ class Order:
             data=OrderPriorityFeeData(priority_fee=priority_fee)
         )
         response = self.client.make_request(
-            "POST", f"orders/{order_id}/priority-fee", data
+            "POST", f"orders/{order_id}/priority-fee", data.model_dump()
         )
         return OrderResponse.model_validate({"data": response})
 
     def edit(self, order_id: str, data: OrderUpdateData) -> OrderResponse:
         data = OrderUpdateBody(data=data)
-        response = self.client.make_request("PATCH", f"orders/{order_id}", data)
+        response = self.client.make_request("PATCH", f"orders/{order_id}", data.model_dump())
         return OrderResponse.model_validate({"data": response})
 
     def cancel(self, order_id: str) -> None:
