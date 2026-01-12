@@ -2,7 +2,7 @@ import httpx
 import json
 import uuid
 from typing import Optional, Dict
-from lalamove.auth import get_auth_token
+from lalamove.auth import HttpMethod, get_auth_token
 from lalamove.enums import Market
 from lalamove.utils import convert_keys_to_camel_case
 from lalamove.errors import (
@@ -28,15 +28,16 @@ PROD_BASE_URL = "https://rest.lalamove.com/v3"
 
 class APIClient:
     def __init__(
-        self, api_key: str, api_secret: str, market: Market, sandbox: bool = False
+        self, api_key: str, api_secret: str, market: Market, sandbox: bool = False, timeout: float = 30.0
     ):
         self.api_key = api_key
         self.api_secret = api_secret
         self.sandbox = sandbox
         self.market = market
         self.base_url = DEV_BASE_URL if sandbox else PROD_BASE_URL
+        self.http = httpx.Client(timeout=timeout)
 
-    def _make_request(self, method: str, endpoint: str, data: Optional[Dict] = None):
+    def _make_request(self, method: HttpMethod, endpoint: str, data: Optional[Dict] = None):
         data = convert_keys_to_camel_case(data)
         body = json.dumps(data) if data else ""
 
@@ -56,9 +57,9 @@ class APIClient:
 
         url = f"{self.base_url}/{endpoint}"
 
-        return httpx.request(method, url, headers=headers, json=data)
+        return self.http.request(method, url, headers=headers, json=data)
 
-    def make_request(self, method: str, endpoint: str, data: Optional[Dict] = None):
+    def make_request(self, method: HttpMethod, endpoint: str, data: Optional[Dict] = None):
         try:
             response = self._make_request(method, endpoint, data)
             response.raise_for_status()
