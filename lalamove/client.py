@@ -3,7 +3,7 @@ import json
 import uuid
 from typing import Optional, Dict
 from lalamove.auth import get_auth_token
-from lalamove.constants import Market
+from lalamove.enums import Market
 from lalamove.utils import convert_keys_to_camel_case
 from lalamove.errors import (
     BadRequest,

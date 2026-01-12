@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
 from lalamove.client import APIClient
-from lalamove.constants import Language
+from lalamove.enums import Language
 
 
 class QuotationCoord(BaseModel):
