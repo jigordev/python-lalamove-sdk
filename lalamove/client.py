@@ -22,8 +22,8 @@ from lalamove.errors import (
     InternalServerError,
 )
 
-DEV_BASE_URL = "https://rest.sandbox.lalamove.com/v3/"
-PROD_BASE_URL = "https://rest.lalamove.com/v3/"
+DEV_BASE_URL = "https://rest.sandbox.lalamove.com/v3"
+PROD_BASE_URL = "https://rest.lalamove.com/v3"
 
 
 class APIClient:
@@ -38,13 +38,14 @@ class APIClient:
 
     def _make_request(self, method: str, endpoint: str, data: Optional[Dict] = None):
         data = convert_keys_to_camel_case(data)
+        body = json.dumps(data) if data else ""
 
         token = get_auth_token(
             self.api_key,
             self.api_secret,
             method.upper(),
             endpoint,
-            json.dumps(data or ""),
+            body,
         )
 
         headers = {
