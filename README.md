@@ -32,7 +32,7 @@ pip install lalamove-sdk
 
 ```python
 from lalamove import LalamoveSDK
-from lalamove.constants import Market
+from lalamove.enums import Market
 
 sdk = LalamoveSDK(
     api_key="YOUR_API_KEY",
@@ -50,7 +50,7 @@ sdk = LalamoveSDK(
 
 ```python
 from lalamove.quotations import QuotationData, QuotationStop, QuotationCoord
-from lalamove.constants import Language
+from lalamove.enums import Language
 
 data = QuotationData(
     service_type="MOTORCYCLE",
@@ -156,7 +156,7 @@ except Unauthorized:
 ### Market
 
 ```python
-from lalamove.constants import Market
+from lalamove.enums import Market
 
 Market.BR  # Brazil
 Market.HK  # Hong Kong
@@ -166,7 +166,7 @@ Market.HK  # Hong Kong
 ### Language
 
 ```python
-from lalamove.constants import Language
+from lalamove.enums import Language
 
 Language.PT_BR  # Brazilian Portuguese
 Language.EN_BR  # English (Brazil)
