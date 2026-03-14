@@ -15,9 +15,9 @@ def test_get_auth_token(mock_time):
     api_secret = "api_secret"
     timestamp = "1735689600000"
 
-    raw = f"{timestamp}\r\n{method}\r\n/{path}\r\n{body}"
+    raw = f"{timestamp}\r\n{method}\r\n/{path}\r\n\r\n{body}"
     signature = hmac.new(api_secret.encode(), raw.encode(), hashlib.sha256).hexdigest()
-    expected_token = f"hmac {api_key}:{timestamp}:{signature}"
+    expected_token = f"{api_key}:{timestamp}:{signature}"
 
-    generated_token = get_auth_token(method, path, body, api_key, api_secret)
+    generated_token = get_auth_token(api_key, api_secret, method, f"/{path}", body)
     assert expected_token == generated_token

@@ -4,7 +4,7 @@ import uuid
 from typing import Optional, Dict
 from lalamove.auth import HttpMethod, get_auth_token
 from lalamove.enums import Market
-from lalamove.utils import convert_keys_to_camel_case
+from lalamove.enums import Market
 from lalamove.errors import (
     BadRequest,
     Unauthorized,
@@ -38,14 +38,14 @@ class APIClient:
         self.http = httpx.Client(timeout=timeout)
 
     def _make_request(self, method: HttpMethod, endpoint: str, data: Optional[Dict] = None):
-        data = convert_keys_to_camel_case(data)
         body = json.dumps(data) if data else ""
+        path = f"/v3/{endpoint}"
 
         token = get_auth_token(
             self.api_key,
             self.api_secret,
             method.upper(),
-            endpoint,
+            path,
             body,
         )
 
@@ -63,6 +63,8 @@ class APIClient:
         try:
             response = self._make_request(method, endpoint, data)
             response.raise_for_status()
+            if response.status_code == 204 or not response.content:
+                return None
             return response.json()
         except httpx.HTTPStatusError as error:
             error_data = error.response.json()

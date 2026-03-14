@@ -2,10 +2,11 @@ from lalamove.client import APIClient
 from lalamove.drivers import Driver
 from datetime import datetime
 from typing import Optional, List, Dict
-from pydantic import BaseModel
+from lalamove.base import LalamoveBaseModel as BaseModel
 
 
 class OrderSender(BaseModel):
+    stop_id: str
     name: str
     phone: str
 
@@ -61,7 +62,8 @@ class OrderStop(BaseModel):
     address: str
     name: str
     phone: str
-    pod: Optional[OrderPOD]
+    remarks: Optional[str] = None
+    pod: Optional[OrderPOD] = None
 
 
 class OrderResponseData(BaseModel):
@@ -103,26 +105,26 @@ class Order:
 
     def place(self, data: OrderData) -> OrderResponse:
         data = OrderBody(data=data)
-        response = self.client.make_request("POST", "orders", data.model_dump())
-        return OrderResponse.model_validate({"data": response})
+        response = self.client.make_request("POST", "orders", data.model_dump(by_alias=True, exclude_none=True, mode="json"))
+        return OrderResponse.model_validate(response)
 
     def get_details(self, order_id: str) -> OrderResponse:
         response = self.client.make_request("GET", f"orders/{order_id}")
-        return OrderResponse.model_validate({"data": response})
+        return OrderResponse.model_validate(response)
 
     def add_priority_fee(self, order_id: str, priority_fee: str) -> OrderResponse:
         data = OrderPriorityFeeBody(
             data=OrderPriorityFeeData(priority_fee=priority_fee)
         )
         response = self.client.make_request(
-            "POST", f"orders/{order_id}/priority-fee", data.model_dump()
+            "POST", f"orders/{order_id}/priority-fee", data.model_dump(by_alias=True, exclude_none=True, mode="json")
         )
-        return OrderResponse.model_validate({"data": response})
+        return OrderResponse.model_validate(response)
 
     def edit(self, order_id: str, data: OrderUpdateData) -> OrderResponse:
         data = OrderUpdateBody(data=data)
-        response = self.client.make_request("PATCH", f"orders/{order_id}", data.model_dump())
-        return OrderResponse.model_validate({"data": response})
+        response = self.client.make_request("PATCH", f"orders/{order_id}", data.model_dump(by_alias=True, exclude_none=True, mode="json"))
+        return OrderResponse.model_validate(response)
 
     def cancel(self, order_id: str) -> None:
         self.client.make_request("DELETE", f"orders/{order_id}")

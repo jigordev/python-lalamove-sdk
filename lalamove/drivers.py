@@ -1,6 +1,6 @@
 from datetime import datetime
 from lalamove.client import APIClient
-from pydantic import BaseModel
+from lalamove.base import LalamoveBaseModel as BaseModel
 
 
 class DriverCoord(BaseModel):
@@ -30,7 +30,7 @@ class Driver:
         response = self.client.make_request(
             "GET", f"orders/{order_id}/drivers/{driver_id}"
         )
-        return DriverResponse.model_validate({"data": response})
+        return DriverResponse.model_validate(response)
 
     def change(self, order_id: str, driver_id: str) -> None:
         self.client.make_request("DELETE", f"orders/{order_id}/drivers/{driver_id}")

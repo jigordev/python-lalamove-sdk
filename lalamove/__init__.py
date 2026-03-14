@@ -3,6 +3,7 @@ from lalamove.client import APIClient
 from lalamove.quotations import Quotation
 from lalamove.orders import Order
 from lalamove.webhook import Webhook
+from lalamove.drivers import Driver
 
 
 class LalamoveSDK:
@@ -23,5 +24,6 @@ __all__ = [
     "Quotation",
     "Order",
     "Webhook",
+    "Driver",
 ]
 

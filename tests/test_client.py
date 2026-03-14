@@ -50,7 +50,7 @@ def test_post_quotation_with_mock():
 
     transport = MockTransport(handler)
     client = APIClient("dummy_key", "dummy_secret", "BR", sandbox=True)
-    client._client = httpx.Client(transport=transport)
+    client.http = httpx.Client(transport=transport)
 
     data = {
         "data": {

@@ -1,5 +1,5 @@
 from lalamove.client import APIClient
-from pydantic import BaseModel
+from lalamove.base import LalamoveBaseModel as BaseModel
 
 
 class WebhookData(BaseModel):
@@ -24,5 +24,5 @@ class Webhook:
 
     def set_webhook(self, url: str):
         data = WebhookBody(data=WebhookData(url=url))
-        response = self.client.make_request("PATCH", "webhook", data.model_dump())
-        return WebhookResponse.model_validate({"data": response})
+        response = self.client.make_request("PATCH", "webhook", data.model_dump(by_alias=True, exclude_none=True, mode="json"))
+        return WebhookResponse.model_validate(response)
